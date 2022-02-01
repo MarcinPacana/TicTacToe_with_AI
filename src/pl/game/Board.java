@@ -101,4 +101,8 @@ public class Board {
         }
         return fieldList;
     }
+
+    public void incrementCounter() {
+        this.movementCounter++;
+    }
 }

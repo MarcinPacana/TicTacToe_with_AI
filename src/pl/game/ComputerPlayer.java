@@ -16,6 +16,7 @@ public class ComputerPlayer extends PlayerBase{
 
     @Override
     public int[] makeAMove(pl.game.Board board) {
+
         ResultMinMax resultMinMax = artificialIntelligence.minMax(board, this);
         return new int[]{resultMinMax.getField().getRow(),resultMinMax.getField().getCol()};
     }

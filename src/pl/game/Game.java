@@ -25,6 +25,7 @@ public class Game {
         userInterface.showMessage("Imie aktualnego gracza to: "+actualPlayer.getName());
         while (true){
             int[] playerMovement = getPlayersMove(actualPlayer);
+            board.incrementCounter();
             pl.game.PlayerBase playerBase = gameManager.checkWins(actualPlayer , this.board, playerMovement);
 
             if (playerBase != null){
@@ -44,6 +45,7 @@ public class Game {
     }
 
     private int[] getPlayersMove(pl.game.PlayerBase player){
+        userInterface.showMessage(player.getName()+", Twoj ruch:");
         int[] playerMovement = player.makeAMove(this.board);
         if (!board.checkValueMovement(playerMovement)){
             board.drawBoard();

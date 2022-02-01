@@ -14,10 +14,11 @@ public class ArtificialIntelligence {
     }
 
     public pl.game.ResultMinMax minMax(pl.game.Board board, pl.game.PlayerBase player) {
-        return minMax(board, 1, player, null);
+        return minMax(board, 1, player, null,minValue,maxValue);
     }
 
-    public pl.game.ResultMinMax minMax(pl.game.Board board, int depth, pl.game.PlayerBase player, int[] lastMove) {
+    public pl.game.ResultMinMax minMax(pl.game.Board board, int depth, pl.game.PlayerBase player,
+                                       int[] lastMove,int alpha, int beta) {
         callCounter++;
         pl.game.Board clonedBoard = board.clone();
         int maxEval = minValue;
@@ -33,6 +34,7 @@ public class ArtificialIntelligence {
         if (scoring != 0) {
             return new pl.game.ResultMinMax(scoring, bestField);
         }
+
         if (emptyFields.isEmpty()) {
             return new pl.game.ResultMinMax(scoring, bestField);
         }
@@ -43,7 +45,8 @@ public class ArtificialIntelligence {
             for (Field filed : emptyFields) {
                 clonedBoard.setSymbol(filed.getRow(), filed.getCol(), player.symbol);
                 int[] move = {filed.getRow(), filed.getCol()};
-                pl.game.ResultMinMax resultMinMax = minMax(clonedBoard, depth + 1, pl.game.PlayerBase.getOponent(player), move);
+                pl.game.ResultMinMax resultMinMax = minMax(clonedBoard, depth + 1,
+                        pl.game.PlayerBase.getOponent(player), move,alpha,beta);
 
                 int eval = resultMinMax.getScore();
 
@@ -52,7 +55,12 @@ public class ArtificialIntelligence {
                     bestField.setCol(filed.getCol());
                     best = eval;
                 }
+                alpha = Math.max(alpha,eval);
                 clonedBoard.setSymbol(filed.getRow(), filed.getCol(), 0);
+                if (beta < alpha){
+
+                    break;
+                }
             }
             return new pl.game.ResultMinMax(best, bestField);
             // jezeli gracz jest minimalizujacy
@@ -61,7 +69,8 @@ public class ArtificialIntelligence {
             for (Field filed : emptyFields) {
                 clonedBoard.setSymbol(filed.getRow(), filed.getCol(), player.symbol);
                 int[] move = {filed.getRow(), filed.getCol()};
-                pl.game.ResultMinMax resultMinMax = minMax(clonedBoard, depth + 1, pl.game.PlayerBase.getOponent(player), move);
+                pl.game.ResultMinMax resultMinMax = minMax(clonedBoard, depth + 1,
+                        pl.game.PlayerBase.getOponent(player), move,alpha,beta);
 
                 int eval = resultMinMax.getScore();
                 if (eval < best) {
@@ -69,7 +78,12 @@ public class ArtificialIntelligence {
                     bestField.setCol(filed.getCol());
                     best = eval;
                 }
+                beta = Math.min(beta,eval);
                 clonedBoard.setSymbol(filed.getRow(), filed.getCol(), 0);
+                if (beta <= alpha){
+
+                    break;
+                }
             }
             return new pl.game.ResultMinMax(best, bestField);
         }
